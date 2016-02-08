@@ -1,36 +1,12 @@
+<!DOCTYPE html>
 <html>
     <head>
     <h1 style="color: blue;" font-family="HelveticaNeue-Bold">PROTOTYPE</h1>
-    <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
     <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+    <script type="text/javascript" src="dashboard.js"></script>
 </head>
-<body>
-    <div id="viz"></div>
-    <script type="text/javascript">
-	$(document).ready(function () {
-
-	    var svgs = $('svg');
-	    $.each(svgs, function (svg) {
-		var sampleSVG = d3.select(svg.id)
-			.append("svg")
-			.attr("width", 100)
-			.attr("height", 100);
-
-		sampleSVG.append("circle")
-			.style("stroke", "gray")
-			.style("fill", "white")
-			.attr("r", 40)
-			.attr("cx", 50)
-			.attr("cy", 50)
-			.on("mouseover", function () {
-			    d3.select(this).style("fill", "aliceblue");
-			})
-			.on("mouseout", function () {
-			    d3.select(this).style("fill", "white");
-			});
-	    });
-	});
-    </script>
+<body>  
     <table>
 	<tr id='top_row'>
 	    <!--TODO: delete wrapper class if i don't end up using it-->
@@ -58,12 +34,6 @@
 	    </td>
 	</tr>
     </table>
-
-    <style>
-	.td {
-	    padding: 20px 20px 20px 20px;   
-	}
-    </style>
 </body>
 </html>
 
