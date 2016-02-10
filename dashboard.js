@@ -1,183 +1,133 @@
 
-var top_left_circle = Circle(50, 300, 300, 'red');
+(function ($) {
 
- function Circle(radius, x, y, color) {
-    var sampleSVG = d3.select("#top_left_wrapper")
-	    .append("svg")
-	    .attr("width", 100)
-	    .attr("height", 100);
+    var circle = new Circle();
+    circle.drawCircle("100", "50", "50");
 
-    sampleSVG.append("circle")
-	    .style("stroke", "gray")
-	    .style("fill", "white")
-	    .attr("r", radius)
-	    .attr("cx", x)
-	    .attr("cy", y)
-	    .on("mouseover", function () {
-		d3.select(this).style("fill", color);
-	    })
-	    .on("mouseout", function () {
-		d3.select(this).style("fill", "white");
+    var Circle = Class.extend({
+	init: function (radius, x, y) {
+	    this.radius = radius;
+	    this.x_pos = x.getX();
+	    this.y_pos = y.getY();
+	},
+	drawCircle: function () {
+	    var self = this;
+	    var wrappers = $('.wrapper');
+	    wrappers.each(function (wrapper) {
+		var re_centered_x = self.getX(wrapper.id);
+		var re_centered_y = self.getY(wrapper.id);
+		var sampleSVG = d3.select(wrapper.id)
+			.append("svg")
+			.attr("width", 100)
+			.attr("height", 100);
+
+		sampleSVG.append("circle")
+			.style("stroke", "gray")
+			.style("fill", "white")
+			.attr("r", radius)
+			.attr("cx", re_centered_x)
+			.attr("cy", re_centered_y)
+			.on("mouseover", function () {
+			    d3.select(this).style("fill", "aliceblue");
+			})
+			.on("mouseout", function () {
+			    d3.select(this).style("fill", "white");
+			});
 	    });
-}
+
+	},
+	getX: function (id) {
+	    var self = this;
+
+	    //div wrapper
+	    var wrapper = $(id);
+	    var parent_cell = wrapper.getParent('td');
+
+	    //get the top coordinate of the cell, its parent td, and passed in x
+	    return wrapper.offsetLeft + parent_cell.offsetLeft + self.x_pos;
+	},
+	getY: function (id) {
+	    var self = this;
+
+	    //div wrapper
+	    var wrapper = $(id);
+	    var parent_cell = wrapper.getParent('td');
+
+	    //get the left coordinate of the cell, its parent td, and passed in x
+	    return wrapper.offsetLeft + parent_cell.offsetLeft + self.y_pos;
+	}
+    });
+
+
+    /* Simple JavaScript Inheritance
+     * By John Resig http://ejohn.org/
+     * MIT Licensed.
+     */
+// Inspired by base2 and Prototype
+    (function () {
+	var initializing = false, fnTest = /xyz/.test(function () {
+	    xyz;
+	}) ? /\b_super\b/ : /.*/;
+
+	// The base Class implementation (does nothing)
+	this.Class = function () {
+	};
+
+	// Create a new Class that inherits from this class
+	Class.extend = function (prop) {
+	    var _super = this.prototype;
+
+	    // Instantiate a base class (but only create the instance,
+	    // don't run the init constructor)
+	    initializing = true;
+	    var prototype = new this();
+	    initializing = false;
+
+	    // Copy the properties over onto the new prototype
+	    for (var name in prop) {
+		// Check if we're overwriting an existing function
+		prototype[name] = typeof prop[name] == "function" &&
+			typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+			(function (name, fn) {
+			    return function () {
+				var tmp = this._super;
+
+				// Add a new ._super() method that is the same method
+				// but on the super-class
+				this._super = _super[name];
+
+				// The method only need to be bound temporarily, so we
+				// remove it when we're done executing
+				var ret = fn.apply(this, arguments);
+				this._super = tmp;
+
+				return ret;
+			    };
+			})(name, prop[name]) :
+			prop[name];
+	    }
+
+	    // The dummy class constructor
+	    function Class() {
+		// All construction is actually done in the init method
+		if (!initializing && this.init)
+		    this.init.apply(this, arguments);
+	    }
+
+	    // Populate our constructed prototype object
+	    Class.prototype = prototype;
+
+	    // Enforce the constructor to be what we expect
+	    Class.prototype.constructor = Class;
+
+	    // And make this class extendable
+	    Class.extend = arguments.callee;
+
+	    return Class;
+	};
+    })();
+
+})(jQuery);
 
 
 
-/* 
- *   jQuery Pie-Loader Plugin 0.1
- *
- *   Based on jQuery Boilerplate by Zeno Rocha with the help of Addy Osmani
- *   http://jqueryboilerplate.com
- 
- *   https://github.com/acezard/jquery-pie-loader
- *
- *   Licensed under the MIT license:
- *   http://www.opensource.org/licenses/MIT
- */
-
-//
-//(function ($, window, document, undefined) {
-//
-//    "use strict";
-//
-//    // Create the defaults once
-//    var pluginName = "pieLoader",
-//	    defaults = {
-//		easing: "easeOutCubic",
-//		dimension: 200,
-//		percentage: 50,
-//		duration: 2000,
-//		onStart: function () {
-//		},
-//		onComplete: function () {
-//		}
-//	    };
-//
-//    // The actual plugin constructor
-//    function Plugin(element, options) {
-//	this.element = element;
-//	this.settings = $.extend({}, defaults, options);
-//	this._defaults = defaults;
-//	this._name = pluginName;
-//	this.init();
-//    }
-//
-//    // Custom easing function borrowed from jQuery-UI  
-//    $.extend($.easing, {
-//	easeOutCubic: function (x, t, b, c, d) {
-//	    return c * ((t = t / d - 1) * t * t + 1) + b;
-//	}
-//    });
-//
-//    // Avoid Plugin.prototype conflicts
-//    $.extend(Plugin.prototype, {
-//	// Initialization logic
-//	init: function () {
-//	    $(this.element).css({
-//		'width': this.settings.dimension + 'px',
-//		'height': this.settings.dimension + 'px'
-//	    })
-//	    this.createSvg();
-//	    this.animateNumber();
-//	    this.animateStrokeDasharray();
-//	    $(this.element).addClass('rendered');
-//	},
-//	// SVG pie markup rendering
-//	createSvg: function () {
-//	    var half = this.settings.dimension / 2;
-//	    var quarter = this.settings.dimension / 4;
-//	    var area = Math.PI * 2 * quarter;
-//	    var svg =
-//		    '<svg xmlns:svg="http://www.w3.org/2000/svg"' +
-//		    'xmlns="http://www.w3.org/2000/svg"' +
-//		    '>' +
-//		    '<circle r="' + half +
-//		    '" cx="' + half +
-//		    '" cy="' + half +
-//		    '"/>' +
-//		    '<circle r="' + (quarter + 0.5) + // +0.5 to debug non-webkit based browsers
-//		    '" cx="' + half +
-//		    '" cy="' + half + '"' +
-//		    'style="stroke-width:' + half + 'px;' +
-//		    'stroke-dasharray:' + '0px' + ' ' + area + ';' +
-//		    '"/>' +
-//		    '</svg>' +
-//		    '<div class="percentage"' +
-//		    '></div>';
-//
-//	    $(this.element).prepend(svg);
-//	},
-//	// Number animation
-//	animateNumber: function () {
-//	    var $target = $(this.element).find('.percentage');
-//
-//	    $({
-//		percentageValue: 0
-//	    }).animate({
-//		percentageValue: this.settings.percentage
-//	    }, {
-//		duration: this.settings.duration,
-//		easing: this.settings.easing,
-//		start: this.settings.onStart,
-//		step: function () {
-//		    // Update the element's text with rounded-up value:
-//		    $target.text(commaSeparateNumber(Math.round(this.percentageValue)) + '%');
-//		},
-//		complete: this.settings.onComplete
-//	    });
-//
-//	    // Rounding output
-//	    function commaSeparateNumber(val) {
-//		while (/(\d+)(\d{3})/.test(val.toString())) {
-//		    val = val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-//		}
-//		return val;
-//	    }
-//	},
-//	// Pie animation
-//	animateStrokeDasharray: function () {
-//	    var debug = [100].indexOf(this.settings.percentage) > -1 ? 1 : 0; // needed to offset the bigger radius 
-//	    var area = 2 * Math.PI * ((this.settings.dimension / 4) + 0.4);
-//	    var strokeEndValue = (this.settings.percentage + debug) * area / 100;
-//	    var $target = $(this.element).find('svg circle:nth-child(2)');
-//
-//	    $({
-//		strokeValue: 0
-//	    }).animate({
-//		strokeValue: strokeEndValue
-//	    }, {
-//		duration: this.settings.duration,
-//		easing: this.settings.easing,
-//		step: function () {
-//		    $target.css('stroke-dasharray', this.strokeValue + 'px' + ' ' + area + 'px');
-//		}
-//	    });
-//
-//	}
-//
-//    });
-//
-//    // A really lightweight plugin wrapper around the constructor,
-//    // preventing against multiple instantiations
-//    $.fn[pluginName] = function (options) {
-//	return this.each(function () {
-//	    if (!$.data(this, "plugin_" + pluginName)) {
-//		$.data(this, "plugin_" + pluginName, new Plugin(this, options));
-//	    }
-//	});
-//    };
-//
-//})(jQuery, window, document);
-//
-//// Codepen specifics
-//$(document).ready(function () {
-//    var rand = function () {
-//	return Math.floor((Math.random() * 100) + 1)
-//    }
-//    $('*[data-behavior="pie-chart"]').each(function () {
-//	$(this).pieLoader({
-//	    percentage: rand()
-//	});
-//
-//    });
-//});
