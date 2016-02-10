@@ -1,70 +1,52 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-    <h1 style="color: blue;" font-family="HelveticaNeue-Bold">PROTOTYPE</h1>
-    <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
-    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
-</head>
-<body>
-    <div id="viz"></div>
-    <script type="text/javascript">
-	$(document).ready(function () {
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<script type="text/javascript" src="../js/libs/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/dashboard.js"></script>
+	<script type="text/javascript" src="../js/libs/d3.js"></script>
+	<link rel="alternate" href="../css/styles.css"></link>
+    </head>
+    <body>  
+	<table border="1">
+	    <tr id='top_row'>
+		<!--TODO: delete wrapper class if i don't end up using it-->
+		<td id="top_left">
+		    <div id="top_left_wrapper" class="wrapper">
 
-	    var svgs = $('svg');
-	    $.each(svgs, function (svg) {
-		var sampleSVG = d3.select(svg.id)
-			.append("svg")
-			.attr("width", 100)
-			.attr("height", 100);
+		    </div>
+		</td>
+		<td id="top_center">
+		    <div id="top_center_wrapper" class="wrapper">
 
-		sampleSVG.append("circle")
-			.style("stroke", "gray")
-			.style("fill", "white")
-			.attr("r", 40)
-			.attr("cx", 50)
-			.attr("cy", 50)
-			.on("mouseover", function () {
-			    d3.select(this).style("fill", "aliceblue");
-			})
-			.on("mouseout", function () {
-			    d3.select(this).style("fill", "white");
-			});
-	    });
-	});
-    </script>
-    <table>
-	<tr id='top_row'>
-	    <!--TODO: delete wrapper class if i don't end up using it-->
-	    <td>
-		<div id="top_left_wrapper" class="wrapper">
-		    <svg id='svg_0'></svg>
-		</div>
-	    </td>
-	    <td>
-		<div id="top_right_wrapper" class="wrapper">
-		    <svg id='svg_1'></svg>
-		</div>
-	    </td>
-	</tr>
-	<tr id='bottom_row'>
-	    <td>
-		<div id="bottom_right_wrapper" class="wrapper">
-		    <svg id='svg_2'></svg>
-		</div>
-	    </td>
-	    <td>
-		<div id="bottom_left_wrapper" class="wrapper">
-		    <svg id='svg_3'></svg>
-		</div>
-	    </td>
-	</tr>
-    </table>
+		    </div>
+		</td>
+		<td id="top_right">
+		    <div id="top_right_wrapper" class="wrapper">
 
-    <style>
-	.td {
-	    padding: 20px 20px 20px 20px;   
-	}
-    </style>
-</body>
+		    </div>
+		</td>
+	    </tr>
+	    <tr id='bottom_row'>
+		<td id="bottom_right">
+		    <div id="bottom_right_wrapper" class="wrapper">
+
+		    </div>
+		</td>
+		<td id="bottom_center">
+		    <div id="bottom_center_wrapper" class="wrapper">
+
+		    </div>
+		</td>
+		<td id="bottom_left">
+		    <div id="bottom_left_wrapper" class="wrapper">
+
+		    </div>
+		</td>
+	    </tr>
+	</table>
+    </body>
 </html>
 
 
